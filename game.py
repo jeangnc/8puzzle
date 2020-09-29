@@ -1,38 +1,102 @@
+#!/usr/bin/env python
+
 from copy import deepcopy
 
-BOARD_SIZE = 3
-FINAL_STATE = [[1,2,3], [4,5,6], [7,8,None]]
-DIRECTIONS = { 'd': [0, 1], 'e': [0, -1], 'c': [-1, 0], 'b': [1, 0] }
+import sys
+import constants
+import serialization
+import algorithms
 
-def move(state, position, direction):
-    displacement = DIRECTIONS[direction]
-    new_position = list(map(sum, zip(position, displacement)))
+def solve(initial_state, algorithm):
+    if not solvable(initial_state):
+        raise ValueError("Initial state not valid")
 
-    invalid_values = [i for i in new_position if i < 0 or i >= BOARD_SIZE]
-    if len(invalid_values) > 0:
-        raise ValueError('Invalid position')
+    seen = set([ initial_state ])
+    visited = set()
 
-    y1, x1 = position
-    y2, x2 = new_position
+    initial_position = value_position(initial_state, constants.EMPTY_VALUE)
+    algorithm.add(initial_state, initial_position, [])
 
-    new_state = deepcopy(state)
-    new_state[y1][x1] = state[y2][x2]
-    new_state[y2][x2] = state[y1][x1]
+    max_available = 0
 
-    return new_state
+    while True:
+        max_available = max(max_available, algorithm.available())
+        state, position, path = algorithm.next()
 
+        if state == constants.FINAL_STATE:
+            break
 
-def swap(state, position_a, position_b):
+        visited.add(state)
 
-    return
+        for direction in available_directions(position):
+            new_position = calculate_position(position, direction)
+            new_state = swap(state, position, new_position)
 
+            if new_state not in seen:
+                algorithm.add(new_state, new_position, path + [direction])
+                seen.add(new_state)
 
+    return {
+        'visited': len(visited),
+        'available': algorithm.available(),
+        'max_available': max_available,
+        'solution': path,
+        'steps': len(path),
+    }
 
-def cost():
-    return
+def solvable(state):
+    inversions = 0
+    seen = []
 
+    for row in state:
+        for cell in row:
+            if cell == constants.EMPTY_VALUE:
+                continue
 
-i = [[1,2,3], [4,5,6], [7,None,8]]
+            inversions += len([i for i in seen if cell < i])
+            seen.append(cell)
 
+<<<<<<< HEAD
 print(move(i, [0,0], 'd'))
 print(i)
+=======
+    return inversions % 2 == 0
+
+def value_position(state, value):
+    for y, row in enumerate(state):
+        for x, cell in enumerate(row):
+            if value == cell:
+                return (y,x)
+    raise ValueError("Unknown value")
+
+def available_directions(position):
+    f = lambda d: is_position_valid(calculate_position(position, d))
+    return list(filter(f, constants.DIRECTIONS))
+
+def is_position_valid(position):
+    invalid_values = [x for x in position if x < 0 or x >= constants.BOARD_SIZE]
+    return len(invalid_values) == 0
+
+def calculate_position(position, direction):
+    displacement = constants.DIRECTIONS[direction]
+    return tuple(map(sum, zip(position, displacement)))
+
+def swap(state, position_1, position_2):
+    y1, x1 = position_1
+    value_1 = state[y1][x1]
+
+    y2, x2 = position_2
+    value_2 = state[y2][x2]
+
+    if not (constants.EMPTY_VALUE in [value_1, value_2]):
+        raise ValueError("Can't swap two filled positions")
+
+    new_state = list(map(list, state))
+    new_state[y1][x1] = value_2
+    new_state[y2][x2] = value_1
+    return tuple(map(tuple, new_state))
+
+
+arg = sys.argv[1]
+initial = tuple(map(tuple, serialization.unserialize(arg)))
+print(solve(initial, algorithms.UniformCost()))

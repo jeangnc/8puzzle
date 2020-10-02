@@ -58,10 +58,6 @@ def solvable(state):
             inversions += len([i for i in seen if cell < i])
             seen.append(cell)
 
-<<<<<<< HEAD
-print(move(i, [0,0], 'd'))
-print(i)
-=======
     return inversions % 2 == 0
 
 def value_position(state, value):
@@ -101,9 +97,9 @@ def swap(state, position_1, position_2):
 
 arg = sys.argv[1]
 initial = tuple(map(tuple, serialization.unserialize(arg)))
-<<<<<<< HEAD
-print(solve(initial, algorithms.UniformCost()))
-=======
-print(solve(initial, algorithms.SimpleHeuristic()))
 
->>>>>>> aa1bf2b (Improve readability)
+print("Uniform cost", solve(initial, algorithms.UniformCost()))
+print("\n")
+print("Simple heuristic", solve(initial, algorithms.SimpleHeuristic()))
+print("\n")
+print("Sophisticated heurístic", solve(initial, algorithms.SophisticatedHeuristic()))

@@ -11,8 +11,7 @@ def solve(initial_state, algorithm):
     if not solvable(initial_state):
         raise ValueError("Initial state not valid")
 
-    seen = set([ initial_state ])
-    visited = set()
+    visited = {}
 
     initial_position = value_position(initial_state, constants.EMPTY_VALUE)
     algorithm.add(initial_state, initial_position, [])
@@ -26,15 +25,18 @@ def solve(initial_state, algorithm):
         if state == constants.FINAL_STATE:
             break
 
-        visited.add(state)
+        cost = len(path)
+        if state in visited:
+            visited_cost = visited[state]
+            if visited_cost >= cost:
+                continue
+
+        visited[state] = cost
 
         for direction in available_directions(position):
             new_position = calculate_position(position, direction)
             new_state = swap(state, position, new_position)
-
-            if new_state not in seen:
-                algorithm.add(new_state, new_position, path + [direction])
-                seen.add(new_state)
+            algorithm.add(new_state, new_position, path + [direction])
 
     return {
         'visited': len(visited),

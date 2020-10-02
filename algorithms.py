@@ -1,13 +1,5 @@
 from heapq import heappop, heappush
 
-"""
-ideia de heurística simples = quantidade de peças fora do lugar
-    calculo o custo de cada jogada (distancia até o local correto dela)
-
-tenho dúvidas nisso aqui ainda, o que precisa ficar claro é que eu vou decidir pra onde eu vou
-pego o primeiro item e mando bala
-"""
-
 class UniformCost:
     def __init__(self):
         self.queue = []

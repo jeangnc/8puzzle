@@ -10,10 +10,6 @@ class UniformCost:
         node = (state, position, path)
         cost = len(path)
 
-        """
-        como queremos o melhor caminho, usar o counter como critério de desempate
-        garante que a busca seja feita por amplitude
-        """
         self.__counter += 1
 
         heappush(self.__queue, (cost, self.__counter, node))

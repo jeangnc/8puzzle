@@ -9,7 +9,7 @@ import algorithms
 
 def solve(initial_state, algorithm):
     if not solvable(initial_state):
-        raise ValueError("Initial state not valid")
+        raise ValueError("Initial state unsolvable")
 
     visited = {}
 
@@ -90,7 +90,7 @@ def swap(state, position_1, position_2):
     y2, x2 = position_2
     value_2 = state[y2][x2]
 
-    if not (constants.EMPTY_VALUE in [value_1, value_2]):
+    if constants.EMPTY_VALUE not in [value_1, value_2]:
         raise ValueError("Can't swap two filled positions")
 
     new_state = list(map(list, state))
@@ -101,4 +101,9 @@ def swap(state, position_1, position_2):
 
 arg = sys.argv[1]
 initial = tuple(map(tuple, serialization.unserialize(arg)))
+<<<<<<< HEAD
 print(solve(initial, algorithms.UniformCost()))
+=======
+print(solve(initial, algorithms.SimpleHeuristic()))
+
+>>>>>>> aa1bf2b (Improve readability)

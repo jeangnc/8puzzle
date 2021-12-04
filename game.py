@@ -5,7 +5,7 @@ from copy import deepcopy
 import sys
 import constants
 import serialization
-import algorithms
+import search
 
 def solve(initial_state, algorithm):
     if not solvable(initial_state):
@@ -101,6 +101,6 @@ def swap(state, position_1, position_2):
 arg = sys.argv[1]
 initial = tuple(map(tuple, serialization.unserialize(arg)))
 
-print("Uniform cost", solve(initial, algorithms.UniformCost()))
-print("Simple heuristic", solve(initial, algorithms.SimpleHeuristic()))
-print("Sophisticated heurístic", solve(initial, algorithms.SophisticatedHeuristic()))
+print("Uniform cost", solve(initial, search.UniformCost()))
+print("Simple heuristic", solve(initial, search.SimpleHeuristic()))
+print("Sophisticated heurístic", solve(initial, search.SophisticatedHeuristic()))

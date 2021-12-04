@@ -102,7 +102,5 @@ arg = sys.argv[1]
 initial = tuple(map(tuple, serialization.unserialize(arg)))
 
 print("Uniform cost", solve(initial, algorithms.UniformCost()))
-print("\n")
 print("Simple heuristic", solve(initial, algorithms.SimpleHeuristic()))
-print("\n")
 print("Sophisticated heurístic", solve(initial, algorithms.SophisticatedHeuristic()))
